@@ -25,8 +25,8 @@ const App = () => {
     return <div>loading...</div>
   }
 
-  const onError = (error) => {
-    setErrorMessage(error.graphQLErrors[0].message)
+  const notify = (message) => {
+    setErrorMessage(message)
     setTimeout(() => {
       setErrorMessage(null)
     }, 10000)
@@ -35,8 +35,8 @@ const App = () => {
   return (
     <div>
       <Notify errorMessage={errorMessage} />
-      <Persons persons = {result.data.allPersons} />
-      <PersonForm onError={onError} />
+      <Persons persons={result.data.allPersons} />
+      <PersonForm setError={notify} />
     </div>
   )
 }
