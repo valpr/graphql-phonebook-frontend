@@ -1,16 +1,8 @@
 import React from 'react'
-import { gql, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import Persons from './components/Persons'
-
-const ALL_PERSONS = gql`
-{
-  allPersons  {
-    name
-    phone
-    id
-  }
-}
-`
+import PersonForm from './components/PersonForm'
+import { ALL_PERSONS } from './queries'
 
 const App = () => {
   const result = useQuery(ALL_PERSONS)
@@ -20,7 +12,10 @@ const App = () => {
   }
 
   return (
-    <Persons persons = {result.data.allPersons}/>
+    <div>
+      <Persons persons = {result.data.allPersons}/>
+      <PersonForm all_persons={ALL_PERSONS }/>
+    </div>
   )
 }
 
