@@ -23,7 +23,7 @@ const PersonForm = ({ setError }) => {
       variables: { name, phone, street, city }
     })
 
-    setName('Arto Hellas')
+    setName('')
     setPhone('')
     setStreet('')
     setCity('')
