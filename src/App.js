@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery, useApolloClient } from '@apollo/client'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
@@ -23,6 +23,13 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const result = useQuery(ALL_PERSONS)
   const client = useApolloClient()
+
+  useEffect(() => {
+    const token = localStorage.getItem('phonenumbers-user-token')
+    if ( token ) {
+      setToken(token)
+    }
+  }, [])
 
   if (result.loading)  {
     return <div>loading...</div>
@@ -56,7 +63,7 @@ const App = () => {
 
   return (
     <div>
-      <button onCLick={logout} >logout</button>
+      <button onClick={logout} >logout</button>
       <Notify errorMessage={errorMessage} />
       <Persons persons={result.data.allPersons} />
       <PersonForm setError={notify} />
