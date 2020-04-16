@@ -1,11 +1,7 @@
 import React from 'react'
+// import {ALL_BOOKS } from '../queries'
 
-const Books = (props) => {
-  if (!props.show) {
-    return null
-  }
-
-  const books = []
+const Books = ({books}) => {
 
   return (
     <div>

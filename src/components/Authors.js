@@ -1,11 +1,11 @@
   
 import React from 'react'
+// import { ALL_AUTHORS} from '../queries'
+// import { useQuery } from '@apollo/client'
 
-const Authors = (props) => {
-  if (!props.show) {
-    return null
-  }
-  const authors = []
+const Authors = ({authors}) => {
+
+
 
   return (
     <div>
