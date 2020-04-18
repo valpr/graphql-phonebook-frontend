@@ -1,24 +1,58 @@
 import React, { useState } from 'react'
+import { useMutation, useApolloClient } from '@apollo/client'
+import { ADD_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries'
+
 
 const NewBook = (props) => {
   const [title, setTitle] = useState('')
-  const [author, setAuhtor] = useState('')
+  const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
+  const client = useApolloClient()
+
+  const [addBook] = useMutation(ADD_BOOK, {
+    refetchQueries: [{query: ALL_BOOKS}, {query:ALL_AUTHORS}],
+    onError: (error) => {
+      console.log(error.graphQLErrors[0].message)
+    },
+    update: (store, response) => {
+      updateCacheWith(response.data.addBook);
+  }
+  })
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) => {
+        console.log(object, addedBook)
+        return set.map(p => p.id).includes(object.id);
+    }
+    const dataInStore = client.readQuery({ query: ALL_BOOKS })
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+        dataInStore.allBooks.push(addedBook);
+        client.writeQuery({
+            query: ALL_BOOKS,
+            data: dataInStore
+        });
+    };
+};
 
   if (!props.show) {
     return null
   }
 
+
   const submit = async (event) => {
     event.preventDefault()
+    await addBook({
+      variables: {
+        title, author, published: parseInt(published), genres
+      }
+    })
     
     console.log('add book...')
 
     setTitle('')
     setPublished('')
-    setAuhtor('')
+    setAuthor('')
     setGenres([])
     setGenre('')
   }
@@ -42,7 +76,7 @@ const NewBook = (props) => {
           author
           <input
             value={author}
-            onChange={({ target }) => setAuhtor(target.value)}
+            onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
         <div>

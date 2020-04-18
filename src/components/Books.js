@@ -1,7 +1,33 @@
-import React from 'react'
-// import {ALL_BOOKS } from '../queries'
+import React, {useState, useEffect} from 'react'
 
-const Books = ({books}) => {
+const Books = ({show, books}) => {
+  const [filter, setFilter] = useState(null)
+  const [genres, setGenres] = useState([])
+
+
+  useEffect(()=>{
+    if (books){
+    books.forEach(
+      book => book.genres.forEach(
+        genre => {
+          if (!genres.find(i =>  i ===genre)){
+            setGenres(genres.concat(genre))
+          }
+        })
+    )
+  }}, [books, genres])
+  if (!show){
+    return null
+  }
+
+  const genreList = () => {
+    return (
+      <div>
+        {genres.map(genre => <button key={genre} onClick={() =>setFilter(genre)}>{genre}</button>)}
+        <button onClick={() =>setFilter(null)}>all genres</button>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -18,15 +44,17 @@ const Books = ({books}) => {
               published
             </th>
           </tr>
-          {books.map(a =>
-            <tr key={a.title}>
+          {books.map(a =>{ return a.genres.find(i => i===filter || filter ===null) ?
+             <tr key={a.title}>
               <td>{a.title}</td>
-              <td>{a.author}</td>
+              <td>{a.author.name}</td>
               <td>{a.published}</td>
-            </tr>
-          )}
+            </tr> : null
+          })}
         </tbody>
       </table>
+      {genreList()}
+
     </div>
   )
 }
