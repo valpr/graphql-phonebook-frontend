@@ -20,20 +20,19 @@ const NewBook = (props) => {
       updateCacheWith(response.data.addBook);
   }
   })
+
   const updateCacheWith = (addedBook) => {
-    const includedIn = (set, object) => {
-        console.log(object, addedBook)
-        return set.map(p => p.id).includes(object.id);
+    const includedIn = (set, object) => set.map(p => p.title).includes(object.title)
+    const dataInStore = client.readQuery({query:ALL_BOOKS})
+    if (!includedIn(dataInStore.allBooks, addedBook)){
+      client.writeQuery({
+        query:ALL_BOOKS,
+        data:{
+          allBooks: dataInStore.allBooks.concat(addedBook)
+        }
+      })
     }
-    const dataInStore = client.readQuery({ query: ALL_BOOKS })
-    if (!includedIn(dataInStore.allBooks, addedBook)) {
-        dataInStore.allBooks.push(addedBook);
-        client.writeQuery({
-            query: ALL_BOOKS,
-            data: dataInStore
-        });
-    };
-};
+  }
 
   if (!props.show) {
     return null

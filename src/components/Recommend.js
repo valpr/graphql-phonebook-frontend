@@ -1,14 +1,11 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {ALL_BOOKS, ME} from '../queries'
 
-import { useQuery, useLazyQuery } from '@apollo/client'
+import { useQuery} from '@apollo/client'
 const Recommend = (props) => {
     const userGenre = useQuery(ME)
     const bookList = useQuery(ALL_BOOKS)
-    const [filteredBooks, setFilteredBooks] = useState (null);
-    //book query by favorite Genre (from me query)
-    //display books
-    //can just query all and filter results residentsleeper
+
     if (!props.show ){
         return null
     }
